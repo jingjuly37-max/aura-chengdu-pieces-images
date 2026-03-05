@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA CHENGDU | Handcrafted Pieces</title>
+    <!-- 引入Anton字体 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+    <style>
+        /* 全局样式 & 品牌色 */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: #f9f3e9; color: #292907; line-height: 1.6; }
+        :root {
+            --primary-blue: #b1e1ff;
+            --dark-brand: #292907;
+            --hero-overlay: rgba(41, 41, 7, 0.5);
+            --text-blue: #80c8f0;
+        }
+
+        /* 导航栏 */
+        .navbar {
+            background-color: var(--primary-blue);
+            padding: 1.2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .navbar .logo {
+            font-family: 'Anton', sans-serif;
+            font-size: 2rem; font-weight: 700; text-decoration: none;
+            color: var(--dark-brand); letter-spacing: 1px;
+        }
+        .navbar .menu { display: flex; gap: 2.5rem; align-items: center; }
+        .navbar .menu a {
+            text-decoration: none; color: var(--dark-brand); font-weight: 500; font-size: 1.1rem;
+            position: relative; transition: all 0.3s;
+        }
+        .navbar .menu a::after {
+            content: ''; position: absolute; bottom: -4px; left: 0;
+            width: 0; height: 2px; background-color: var(--dark-brand); transition: width 0.3s;
+        }
+        .navbar .menu a:hover::after { width: 100%; }
+        .navbar .cta {
+            background-color: var(--dark-brand); color: #f9f3e9;
+            padding: 0.6rem 1.5rem; border-radius: 4px; text-decoration: none;
+            font-weight: 500; font-size: 1.05rem; transition: background-color 0.3s;
+        }
+        .navbar .cta:hover { background-color: #44440a; }
+
+        /* Hero区 */
+        .hero {
+            width: 100%; height: 80vh;
+            position: relative; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .hero img {
+            width: 100%; height: 100%; object-fit: cover;
+        }
+        .hero .overlay {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--hero-overlay);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            text-align: center; padding: 2rem;
+        }
+        .hero h1 {
+            font-family: 'Anton', sans-serif;
+            font-size: 4rem; margin-bottom: 1.5rem;
+            color: var(--text-blue);
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.2); letter-spacing: 3px;
+        }
+        .hero p {
+            font-size: 1.3rem; max-width: 800px; margin-bottom: 2rem;
+            color: white; text-shadow: 1px 1px 4px rgba(0,0,0,0.2);
+        }
+
+        /* 品牌介绍 & 系列介绍 */
+        .intro { padding: 6rem 5%; text-align: center; max-width: 1200px; margin: 0 auto; }
+        .intro h2 { font-size: 2.2rem; margin-bottom: 2rem; color: var(--dark-brand); }
+        .intro p { font-size: 1.1rem; max-width: 900px; margin: 0 auto; line-height: 1.8; }
+        .collection-intro { padding: 0 5% 2rem; max-width: 1200px; margin: 0 auto; text-align: center; }
+
+        /* 饰品展示区 - 统一正方形容器 */
+        .collections { padding: 4rem 5%; max-width: 1400px; margin: 0 auto; }
+        .collection-title {
+            text-align: center; margin-bottom: 4rem; padding-bottom: 1rem;
+            border-bottom: 2px solid var(--primary-blue);
+        }
+        .collection-title h3 { font-size: 2rem; color: var(--dark-brand); }
+        .collection-title p { margin-top: 0.8rem; color: var(--dark-brand); opacity: 0.8; }
+
+        .pieces-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2.5rem; margin-bottom: 6rem;
+        }
+        .pieces-card {
+            background-color: white; border-radius: 8px; overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        .pieces-card:hover { transform: translateY(-8px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+        /* 关键：固定为正方形容器 */
+        .pieces-img {
+            width: 100%;
+            aspect-ratio: 1 / 1; /* 强制正方形 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #e8e3d8;
+            overflow: hidden;
+        }
+        /* 图片完整显示，居中，不裁剪 */
+        .pieces-img img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            object-position: center;
+            filter: brightness(1.05) contrast(1.02);
+        }
+        .pieces-card .card-content { padding: 1.5rem; }
+        .pieces-card h4 { font-size: 1.2rem; margin-bottom: 0.8rem; color: var(--dark-brand); }
+        .pieces-card p { color: var(--dark-brand); opacity: 0.8; font-size: 0.95rem; }
+
+        /* 弹窗 */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; background-color: rgba(0,0,0,0.8);
+            z-index: 1000; align-items: center; justify-content: center;
+            padding: 2rem;
+        }
+        .modal-content {
+            background-color: #f9f3e9; border-radius: 8px;
+            max-width: 900px; width: 100%; position: relative;
+        }
+        .modal-close {
+            position: absolute; top: 1.5rem; right: 1.5rem;
+            font-size: 1.8rem; color: var(--dark-brand);
+            cursor: pointer; z-index: 1001;
+        }
+        .modal-body { display: flex; flex-wrap: wrap; }
+        .modal-image {
+            flex: 1 1 500px; padding: 1rem;
+            background-color: #e8e3d8; display: flex;
+            align-items: center; justify-content: center;
+        }
+        .modal-image img { width: 100%; height: auto; border-radius: 4px; object-fit: contain; }
+        .modal-details { flex: 1 1 300px; padding: 2rem; }
+        .modal-details h4 { font-size: 1.8rem; margin-bottom: 1.5rem; color: var(--dark-brand); }
+        .modal-details p { margin-bottom: 1rem; font-size: 1.1rem; color: var(--dark-brand); }
+
+        /* 页脚 */
+        .footer {
+            background-color: var(--primary-blue);
+            padding: 4rem 5%; text-align: center;
+            color: var(--dark-brand);
+        }
+        .footer .social { margin-bottom: 2rem; }
+        .footer .social a {
+            color: var(--dark-brand); font-size: 1.5rem;
+            margin: 0 1rem; text-decoration: none;
+        }
+        .footer p { margin-bottom: 1rem; }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .navbar .menu { display: none; }
+            .hero h1 { font-size: 2.8rem; }
+            .hero p { font-size: 1.1rem; }
+            .intro h2 { font-size: 1.8rem; }
+            .pieces-grid { grid-template-columns: 1fr; }
+            .modal-body { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <a href="#" class="logo">AURA CHENGDU</a>
+        <div class="menu">
+            <a href="#">Home</a>
+            <a href="#pieces">Pieces</a>
+            <a href="#">Experience</a>
+            <a href="#">Lifestyle</a>
+        </div>
+        <a href="https://instagram.com" target="_blank" class="cta">DM to Inquire</a>
+    </nav>
+
+    <!-- Hero区 -->
+    <section class="hero">
+        <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/hero.jpg" alt="Aura Chengdu Handcrafted Pieces">
+        <div class="overlay">
+            <h1>HANDCRAFTED</h1>
+            <p>Wearable Art that carries the quiet soul of Chengdu</p>
+        </div>
+    </section>
+
+    <!-- 品牌介绍 -->
+    <section class="intro">
+        <h2>AURA CHENGDU | HANDCRAFTED PIECES</h2>
+        <p>Wearable Art from the Heart of Sichuan. As a cornerstone of our lifestyle aesthetics, our handcrafted collections are physical manifestations of Chengdu’s soul. Rooted in slow living and local craftsmanship, each piece is a wearable journal that captures the botanical beauty and timeless elegance of the city.</p>
+    </section>
+
+    <!-- 饰品系列 -->
+    <section class="collections" id="pieces">
+        <!-- 🌿 BOTANICAL REVERIE 系列 -->
+        <div class="collection-title">
+            <h3>BOTANICAL REVERIE</h3>
+            <p>Nature Captured — Wearable Art from Chengdu’s Gardens</p>
+        </div>
+        <div class="collection-intro">
+            <p>Born from the quiet gardens and slow afternoons of Chengdu, Botanical Reverie transforms the city’s ephemeral beauty into permanent wearable art. Each piece begins with real botanicals—handpicked petals and leaves native to Sichuan—carefully preserved within crystal-clear resin and precious metal settings. Crafted as limited releases, these pieces are a poetic ode to slow living.</p>
+        </div>
+
+        <div class="pieces-grid">
+            <!-- 原有款 01-05 -->
+            <div class="pieces-card" onclick="openModal('https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_01.png', 'Golden Teardrop Floral Drop Earrings', 'Real preserved white cherry blossoms and green foliage from Chengdu, clear resin, freshwater pearl, gold-plated brass')">
+                <div class="pieces-img">
+                    <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_01.png" alt="Golden Teardrop Floral Drop Earrings">
+                </div>
+                <div class="card-content">
+                    <h4>Golden Teardrop Floral Drop Earrings</h4>
+                    <p>Chengdu cherry blossoms • Clear resin • Freshwater pearl</p>
+                </div>
+            </div>
+            <div class="pieces-card" onclick="openModal('https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_02.jpg', 'Blue Tulip-shaped Floral Brooch', 'Real preserved forget-me-nots and white baby’s breath from Chengdu, clear resin, freshwater pearl, cubic zirconia, gold-plated brass')">
+                <div class="pieces-img">
+                    <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_02.jpg" alt="Blue Tulip-shaped Floral Brooch">
+                </div>
+                <div class="card-content">
+                    <h4>Blue Tulip-shaped Floral Brooch</h4>
+                    <p>Forget-me-nots • Clear resin • Cubic zirconia</p>
+                </div>
+            </div>
+            <div class="pieces-card" onclick="openModal('https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_03.png', 'Lily of the Valley Heart Pendant Necklace', 'Hand-painted enamel depicting lily of the valley, freshwater pearls, 14K gold-plated chain')">
+                <div class="pieces-img">
+                    <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_03.png" alt="Lily of the Valley Heart Pendant Necklace">
+                </div>
+                <div class="card-content">
+                    <h4>Lily of the Valley Heart Pendant Necklace</h4>
+                    <p>Hand-painted enamel • Freshwater pearls • 14K gold-plated chain</p>
+                </div>
+            </div>
+            <div class="pieces-card" onclick="openModal('https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_04.jpg', 'Fan-shaped Floral Tassel Earrings', 'Real preserved mixed botanicals from Chengdu, clear resin, gold-plated chain tassels, gold-plated brass')">
+                <div class="pieces-img">
+                    <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_04.jpg" alt="Fan-shaped Floral Tassel Earrings">
+                </div>
+                <div class="card-content">
+                    <h4>Fan-shaped Floral Tassel Earrings</h4>
+                    <p>Mixed botanicals • Clear resin • Gold-plated tassels</p>
+                </div>
+            </div>
+            <div class="pieces-card" onclick="openModal('https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_05.png', 'Impressionist Floral Square Ring', 'Hand-painted enamel with impressionist floral design, 925 sterling silver band')">
+                <div class="pieces-img">
+                    <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_05.png" alt="Impressionist Floral Square Ring">
+                </div>
+                <div class="card-content">
+                    <h4>Impressionist Floral Square Ring</h4>
+                    <p>Hand-painted enamel • 925 sterling silver band</p>
+                </div>
+            </div>
+            <!-- 新增款 06-10 -->
+            <div class="pieces-card" onclick="openModal('https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_06.png', 'Golden Rectangular Floral Drop Earrings', 'Real preserved white cherry blossoms and green foliage from Chengdu, clear resin, freshwater pearl, gold-plated brass')">
+                <div class="pieces-img">
+                    <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_06.png" alt="Golden Rectangular Floral Drop Earrings">
+                </div>
+                <div class="card-content">
+                    <h4>Golden Rectangular Floral Drop Earrings</h4>
+                    <p>White cherry blossoms • Clear resin • Gold-plated brass</p>
+                </div>
+            </div>
+            <div class="pieces-card" onclick="openModal('https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_07.jpg', 'Oval Botanical Preserved Pearl Necklace', 'Real preserved Chengdu native foliage encapsulated in clear resin, oval pendant, freshwater pearl accents, 14K gold-plated chain, toggle clasp')">
+                <div class="pieces-img">
+                    <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_07.jpg" alt="Oval Botanical Preserved Pearl Necklace">
+                </div>
+                <div class="card-content">
+                    <h4>Oval Botanical Preserved Pearl Necklace</h4>
+                    <p>Native foliage • Clear resin • 14K gold-plated chain</p>
+                </div>
+            </div>
+            <div class="pieces-card" onclick="openModal('https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_08.png', 'Triple Floral Fan Drop Earrings with Butterflies', 'Layered fan-shaped resin pendants with mixed preserved botanicals, gold-plated butterfly charms, lightweight gold-plated brass hardware')">
+                <div class="pieces-img">
+                    <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_08.png" alt="Triple Floral Fan Drop Earrings with Butterflies">
+                </div>
+                <div class="card-content">
+                    <h4>Triple Floral Fan Drop Earrings with Butterflies</h4>
+                    <p>Mixed botanicals • Butterfly charms • Gold-plated brass</p>
+                </div>
+            </div>
+            <div class="pieces-card" onclick="openModal('https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_09.png', 'Irregular Floral Baroque Pearl Drop Earrings', 'Free-form resin with embedded local flora, baroque freshwater pearl dangles, gold-plated brass settings, hypoallergenic hooks')">
+                <div class="pieces-img">
+                    <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_09.png" alt="Irregular Floral Baroque Pearl Drop Earrings">
+                </div>
+                <div class="card-content">
+                    <h4>Irregular Floral Baroque Pearl Drop Earrings</h4>
+                    <p>Local flora • Baroque pearl • Hypoallergenic hooks</p>
+                </div>
+            </div>
+            <div class="pieces-card" onclick="openModal('https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_10.png', 'Red Enamel Cherry Blossom & Pearl Bracelet', 'Red enamel base with preserved cherry blossom in clear resin, freshwater pearl beads, red agate spacers, adjustable gold-plated chain')">
+                <div class="pieces-img">
+                    <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_10.png" alt="Red Enamel Cherry Blossom & Pearl Bracelet">
+                </div>
+                <div class="card-content">
+                    <h4>Red Enamel Cherry Blossom & Pearl Bracelet</h4>
+                    <p>Cherry blossom • Red agate • Adjustable chain</p>
+                </div>
+            </div>
+
+            <!-- ====================== 新增：BOTANICAL 11–20 已插入 ====================== -->
+            <div class="pieces-card" onclick="openModal('https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_11.png', 'Butterfly & Multi-Gemstone Pearl Bracelet', 'Baroque pearls, natural gemstone beads, enamel butterfly charm, adjustable gold-plated chain')">
+                <div class="pieces-img">
+                    <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_11.png" alt="Butterfly & Multi-Gemstone Pearl Bracelet">
+                </div>
+                <div class="card-content">
+                    <h4>Butterfly & Multi-Gemstone Pearl Bracelet</h4>
+                    <p>Baroque pearls • Natural gemstones • Enamel butterfly</p>
+                </div>
+            </div>
+
+            <div class="pieces-card" onclick="openModal('https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_12.jpg', 'Blue Floral Pearl Drop Earrings', 'Pressed blue botanicals in clear resin, baroque pearl drop, sterling silver frame')">
+                <div class="pieces-img">
+                    <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_12.jpg" alt="Blue Floral Pearl Drop Earrings">
+                </div>
+                <div class="card-content">
+                    <h4>Blue Floral Pearl Drop Earrings</h4>
+                    <p>Blue botanicals • Clear resin • Baroque pearl</p>
+                </div>
+            </div>
+
+            <div class="pieces-card" onclick="openModal('https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_13.png', 'Amber Floral Pearl Drop Earrings', 'Pressed botanicals in amber-tinted resin, baroque pearl drop, gold-plated frame')">
+                <div class="pieces-img">
+                    <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_13.png" alt="Amber Floral Pearl Drop Earrings">
+                </div>
+                <div class="card-content">
+                    <h4>Amber Floral Pearl Drop Earrings</h4>
+                    <p>Amber resin • Pressed botanicals • Baroque pearl</p>
+                </div>
+            </div>
+
+            <div class="pieces-card" onclick="openModal('https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_14.jpg', 'Red Floral Tassel Earrings', 'Pressed white botanicals in red enamel base, freshwater pearl tassels, gold-plated frame')">
+                <div class="pieces-img">
+                    <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_14.jpg" alt="Red Floral Tassel Earrings">
+                </div>
+                <div class="card-content">
+                    <h4>Red Floral Tassel Earrings</h4>
+                    <p>Red enamel • White botanicals • Pearl tassels</p>
+                </div>
+            </div>
+
+            <div class="pieces-card" onclick="openModal('https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_15.jpg', 'Black Floral Tassel Earrings', 'Pressed white botanicals in black enamel base, freshwater pearl tassels, gold-plated frame')">
+                <div class="pieces-img">
+                    <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_15.jpg" alt="Black Floral Tassel Earrings">
+                </div>
+                <div class="card-content">
+                    <h4>Black Floral Tassel Earrings</h4>
+                    <p>Black enamel • White botanicals • Pearl tassels</p>
+                </div>
+            </div>
+
+            <div class="pieces-card" onclick="openModal('https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_16.jpg', 'Red Floral Long Chain Earrings', 'Pressed white botanicals in red enamel base, gold-plated chain, baroque pearl, blue-green gemstone accents')">
+                <div class="pieces-img">
+                    <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_16.jpg" alt="Red Floral Long Chain Earrings">
+                </div>
+                <div class="card-content">
+                    <h4>Red Floral Long Chain Earrings</h4>
+                    <p>Red enamel • Long chain • Baroque pearl</p>
+                </div>
+            </div>
+
+            <div class="pieces-card" onclick="openModal('https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_17.jpg', 'Black Floral Long Chain Earrings', 'Pressed white botanicals in black enamel base, sterling silver chain, baroque pearl, blue-green gemstone accents')">
+                <div class="pieces-img">
+                    <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_17.jpg" alt="Black Floral Long Chain Earrings">
+                </div>
+                <div class="card-content">
+                    <h4>Black Floral Long Chain Earrings</h4>
+                    <p>Black enamel • Silver chain • Baroque pearl</p>
+                </div>
+            </div>
+
+            <div class="pieces-card" onclick="openModal('https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_18.jpg', 'Blue Floral Butterfly Pearl Earrings', 'Pressed blue botanicals in enamel butterfly frame, baroque pearl drop, sterling silver setting')">
+                <div class="pieces-img">
+                    <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_18.jpg" alt="Blue Floral Butterfly Pearl Earrings">
+                </div>
+                <div class="card-content">
+                    <h4>Blue Floral Butterfly Pearl Earrings</h4>
+                    <p>Enamel butterfly • Blue flora • Baroque pearl</p>
+                </div>
+            </div>
+
+            <div class="pieces-card" onclick="openModal('https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_19.png', 'Black Rectangular Floral Drop Earrings', 'Pressed botanicals in black resin base, freshwater pearl drops, gold-plated brass hooks')">
+                <div class="pieces-img">
+                    <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_19.png" alt="Black Rectangular Floral Drop Earrings">
+                </div>
+                <div class="card-content">
+                    <h4>Black Rectangular Floral Drop Earrings</h4>
+                    <p>Black resin • Pressed botanicals • Freshwater pearls</p>
+                </div>
+            </div>
+
+            <div class="pieces-card" onclick="openModal('https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_20.png', 'Red Rectangular Floral Drop Earrings', 'Hand-painted floral & butterfly motifs in red resin base, blue glass beads, gold-plated brass hooks')">
+                <div class="pieces-img">
+                    <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/botanical_20.png" alt="Red Rectangular Floral Drop Earrings">
+                </div>
+                <div class="card-content">
+                    <h4>Red Rectangular Floral Drop Earrings</h4>
+                    <p>Red resin • Hand-painted • Blue glass beads</p>
+                </div>
+            </div>
+            <!-- ====================== 新增 11–20 结束 ====================== -->
+
+        </div>
+
+        <!-- ✨ VINTAGE WHISPER 系列 -->
+        <div class="collection-title">
+            <h3>VINTAGE WHISPER</h3>
+            <p>The Heirloom Statement — Where East Meets West in Chengdu</p>
+        </div>
+        <div class="collection-intro">
+            <p>Inspired by Chengdu’s unique blend of old-world charm and cosmopolitan elegance, Vintage Whisper reinterprets grandeur for the contemporary connoisseur. Drawing from both European archival design and Chinese artisanal techniques, each piece is handcrafted using textured metals, antique-finish brass, and luminous freshwater pearls. Conceived as modern heirlooms, these works are more than mere adornment.</p>
+        </div>
+
+        <div class="pieces-grid">
+            <!-- 原有款 01-05 -->
+            <div class="pieces-card" onclick="openModal('https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/vintage_01.jpg', 'Mother-of-Pearl Carved Cloud & Lacquer Bead Drop Earrings', 'Carved mother-of-pearl, hand-painted celestial beads, 14K gold-plated hooks')">
+                <div class="pieces-img">
+                    <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/vintage_01.jpg" alt="Mother-of-Pearl Carved Cloud & Lacquer Bead Drop Earrings">
+                </div>
+                <div class="card-content">
+                    <h4>Mother-of-Pearl Carved Cloud & Lacquer Bead Drop Earrings</h4>
+                    <p>Carved mother-of-pearl • Lacquer beads • 14K gold-plated hooks</p>
+                </div>
+            </div>
+            <div class="pieces-card" onclick="openModal('https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/vintage_02.jpg', 'Baroque Pearl Statement Necklace & Earring Set', 'Freshwater baroque pearls, white shell beads, 14K gold-plated accents, cubic zirconia')">
+                <div class="pieces-img">
+                    <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/vintage_02.jpg" alt="Baroque Pearl Statement Necklace & Earring Set">
+                </div>
+                <div class="card-content">
+                    <h4>Baroque Pearl Statement Necklace & Earring Set</h4>
+                    <p>Baroque pearls • White shell beads • 14K gold-plated accents</p>
+                </div>
+            </div>
+            <div class="pieces-card" onclick="openModal('https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/vintage_03.png', 'Baroque Pearl & Pink Quartz Drop Earrings', 'Freshwater baroque pearls, faceted pink quartz, 14K gold-plated hooks')">
+                <div class="pieces-img">
+                    <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/vintage_03.png" alt="Baroque Pearl & Pink Quartz Drop Earrings">
+                </div>
+                <div class="card-content">
+                    <h4>Baroque Pearl & Pink Quartz Drop Earrings</h4>
+                    <p>Baroque pearls • Pink quartz • 14K gold-plated hooks</p>
+                </div>
+            </div>
+            <div class="pieces-card" onclick="openModal('https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/vintage_04.jpg', 'Multicolored Baroque Pearl Strand Necklace', 'Multicolored freshwater baroque pearls, small gold spacer beads')">
+                <div class="pieces-img">
+                    <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/vintage_04.jpg" alt="Multicolored Baroque Pearl Strand Necklace">
+                </div>
+                <div class="card-content">
+                    <h4>Multicolored Baroque Pearl Strand Necklace</h4>
+                    <p>Multicolored pearls • Gold spacer beads</p>
+                </div>
+            </div>
+            <div class="pieces-card" onclick="openModal('https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/vintage_05.jpg', 'Green Lacquer Bead & Jade Bamboo Necklace & Earring Set', 'Handcrafted Chinese lacquer (大漆) beads, green jade bamboo beads, black onyx, 14K gold-plated hardware')">
+                <div class="pieces-img">
+                    <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/vintage_05.jpg" alt="Green Lacquer Bead & Jade Bamboo Necklace & Earring Set">
+                </div>
+                <div class="card-content">
+                    <h4>Green Lacquer Bead & Jade Bamboo Necklace & Earring Set</h4>
+                    <p>Chinese lacquer beads • Jade bamboo • Black onyx</p>
+                </div>
+            </div>
+            <!-- 新增款 06-10 -->
+            <div class="pieces-card" onclick="openModal('https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/vintage_06.png', 'Pink Pearl & Amethyst Statement Necklace', 'Pink freshwater pearls, amethyst rectangular beads, silver filigree accents, 14K gold-plated hardware')">
+                <div class="pieces-img">
+                    <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/vintage_06.png" alt="Pink Pearl & Amethyst Statement Necklace">
+                </div>
+                <div class="card-content">
+                    <h4>Pink Pearl & Amethyst Statement Necklace</h4>
+                    <p>Pink pearls • Amethyst • Silver filigree accents</p>
+                </div>
+            </div>
+            <div class="pieces-card" onclick="openModal('https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/vintage_07.png', 'Pink Baroque Pearl Cluster Statement Necklace', 'Cluster of pink baroque pearls, mother-of-pearl inlay details, gold-plated hardware, adjustable length toggle closure')">
+                <div class="pieces-img">
+                    <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/vintage_07.png" alt="Pink Baroque Pearl Cluster Statement Necklace">
+                </div>
+                <div class="card-content">
+                    <h4>Pink Baroque Pearl Cluster Statement Necklace</h4>
+                    <p>Pink baroque pearls • Mother-of-pearl • Adjustable closure</p>
+                </div>
+            </div>
+            <div class="pieces-card" onclick="openModal('https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/vintage_08.png', 'Gold Chain & Baroque Pearl Drop Earrings', 'Rectangular gold-plated chain links, baroque freshwater pearl dangles, 14K gold-plated hooks, minimalist vintage design')">
+                <div class="pieces-img">
+                    <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/vintage_08.png" alt="Gold Chain & Baroque Pearl Drop Earrings">
+                </div>
+                <div class="card-content">
+                    <h4>Gold Chain & Baroque Pearl Drop Earrings</h4>
+                    <p>Gold-plated chain • Baroque pearl • Minimalist design</p>
+                </div>
+            </div>
+            <div class="pieces-card" onclick="openModal('https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/vintage_09.png', 'Blue Sodalite & Silver Leaf Statement Earrings', 'Blue sodalite beads, silver leaf charms, blue topaz accents, mixed celestial charms (moon, feather, star), gold-plated hardware')">
+                <div class="pieces-img">
+                    <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/vintage_09.png" alt="Blue Sodalite & Silver Leaf Statement Earrings">
+                </div>
+                <div class="card-content">
+                    <h4>Blue Sodalite & Silver Leaf Statement Earrings</h4>
+                    <p>Blue sodalite • Silver leaf • Celestial charms</p>
+                </div>
+            </div>
+            <div class="pieces-card" onclick="openModal('https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/vintage_10.jpg', 'Dual-tone Pearl Bracelet & Necklace Set', 'Freshwater pearls paired with silver spacer beads, 14K gold-plated accents, matching bracelet with elastic band for easy wear')">
+                <div class="pieces-img">
+                    <img src="https://raw.githubusercontent.com/jingjuly37-max/aura-chengdu-pieces-images/main/vintage_10.jpg" alt="Dual-tone Pearl Bracelet & Necklace Set">
+                </div>
+                <div class="card-content">
+                    <h4>Dual-tone Pearl Bracelet & Necklace Set</h4>
+                    <p>Freshwater pearls • Silver spacers • Elastic bracelet</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 弹窗 -->
+    <div class="modal" id="piecesModal">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="modal-image">
+                    <img id="modalImage" src="" alt="Handcrafted Piece Detail">
+                </div>
+                <div class="modal-details">
+                    <h4 id="modalTitle"></h4>
+                    <p id="modalDescription"></p>
+                    <br>
+                    <p><strong>To inquire:</strong> DM on Instagram or email us</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="social">
+            <a href="https://instagram.com" target="_blank">Instagram</a>
+            <a href="mailto:your-email@aurachengdu.com" target="_blank">Email</a>
+        </div>
+        <p>Handcrafted pieces · Local Adventures · Slow Living</p>
+        <p>&copy; 2026 Aura Chengdu. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // 弹窗功能
+        function openModal(imageUrl, title, description) {
+            const modal = document.getElementById('piecesModal');
+            const modalImg = document.getElementById('modalImage');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalDesc = document.getElementById('modalDescription');
+            
+            modalImg.src = imageUrl;
+            modalTitle.textContent = title;
+            modalDesc.textContent = description;
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('piecesModal').style.display = 'none';
+        }
+
+        // 点击外部关闭弹窗
+        window.onclick = function(e) {
+            const modal = document.getElementById('piecesModal');
+            if (e.target === modal) closeModal();
+        }
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
